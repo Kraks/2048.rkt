@@ -19,7 +19,7 @@
        (append (reverse (cdr (reverse acc))) `(,(* y 2) 0))]
       [(not (eq? y 0)) (append acc `(,y))]
       [else acc])))
-  
+
 (define mergeLineLeft
   (lambda (xs)
     (let ([ys (filter-not zero? (foldl mergeAux '() xs))])
@@ -114,4 +114,4 @@
 
 (define A (setRandomNumber (setRandomNumber (newEmpty 4))))
 
-;(newGame A)
+(newGame A)
