@@ -4,13 +4,11 @@
 
 (require racket/format)
 
-;; only for 4x4 matrix, need fix
 (define transpose
   (lambda (a)
-    (list (map first a)
-          (map second a)
-          (map third a)
-          (map fourth a))))
+    (map (lambda (i) 
+           (map (lambda (line) (list-ref line i)) a)) 
+         (range (length a)))))
 
 (define mergeAux
   (lambda (y acc)
@@ -28,24 +26,19 @@
       (append ys (make-list (- (length xs) (length ys)) 0)))))
 
 (define mergeLineRight
-  (lambda (xs)
-    (reverse (mergeLineLeft (reverse xs)))))
+  (lambda (xs) (reverse (mergeLineLeft (reverse xs)))))
 
 (define mergeLeft
-  (lambda (a)
-    (map mergeLineLeft a)))
+  (lambda (a) (map mergeLineLeft a)))
 
 (define mergeRight
-  (lambda (a)
-    (map mergeLineRight a)))
+  (lambda (a) (map mergeLineRight a)))
 
 (define mergeUp
-  (lambda (a)
-    (transpose (mergeLeft (transpose a)))))
+  (lambda (a) (transpose (mergeLeft (transpose a)))))
 
 (define mergeDown
-  (lambda (a)
-    (transpose (mergeRight (transpose a)))))
+  (lambda (a) (transpose (mergeRight (transpose a)))))
 
 (define isWin
   (lambda (a)
@@ -121,4 +114,4 @@
 
 (define A (setRandomNumber (setRandomNumber (newEmpty 4))))
 
-(newGame A)
+;(newGame A)
