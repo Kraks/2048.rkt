@@ -101,7 +101,7 @@
   (lambda (size)
     (build-list size (lambda (x) (build-list size (lambda (y) 0))))))
 
-(define game
+(define newGame
   (lambda (a)
     (begin
       (prettyPrint a)
@@ -115,10 +115,10 @@
                               ['d (mergeRight a)]
                               ['q (printf "quit")]
                               [_  (begin (printf "Invalid input key")
-                                         (game a))])])
-                    (cond [(equal? a b) (game b)]
-                          [else (game (setRandomNumber b))]))]))))
+                                         (newGame a))])])
+                    (cond [(equal? a b) (newGame b)]
+                          [else (newGame (setRandomNumber b))]))]))))
 
 (define A (setRandomNumber (setRandomNumber (newEmpty 4))))
 
-(game A)
+(newGame A)
