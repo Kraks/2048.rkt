@@ -1,5 +1,8 @@
 #lang racket
+;; A text-based 2048 game
 ;; Guannan Wei <kiss.kraks@gmail.com>
+
+(require racket/format)
 
 ;; only for 4x4 matrix, need fix
 (define transpose
@@ -44,14 +47,9 @@
   (lambda (a)
     (transpose (mergeRight (transpose a)))))
 
-(define traverse
-  (lambda (a f)
-    (ormap (lambda (line) (ormap f line))
-           a)))
-
 (define isWin
   (lambda (a)
-    (traverse a (lambda (x) (eq? x 2048)))))
+    (ormap (lambda (line) (ormap (lambda (x) (eq? x 2048)) line)) a)))
 
 (define isFail
   (lambda (a)
@@ -61,10 +59,10 @@
 (define isLineFail
   (lambda (line)
     (let ([ziped (zip line)])
-      (andmap (lambda (p) (not (or (eq? (car p) (cdr p))
-                              (zero? (car p))
-                              (zero? (cdr p)))))
-              ziped))))
+      (andmap (lambda (p)
+                (not (or (eq? (car p) (cdr p))
+                         (zero? (car p))
+                         (zero? (cdr p))))) ziped))))
 
 (define zip
   (lambda (lst)
@@ -73,3 +71,54 @@
        (cons (cons (car lst) (cadr lst))
              (zip (cdr lst)))]
       [else '()])))
+
+(define prettyPrint
+  (lambda (a)
+    (for-each (lambda (x)
+                (cond [(list? x) (begin (prettyPrint x) (printf "\n"))]
+                      [else (printf (~a x #:min-width 5 #:align 'right))])) a)))
+
+(define newRandomNumber
+  (lambda ()
+    (let* ([seed '(2 2 2 2 4)]
+           [pos (random (length seed))])
+      (list-ref seed pos))))
+
+(define setRandomNumber
+  (lambda (a)
+    (let* ([x (random (length a))]
+           [y (random (length a))]
+           [r (newRandomNumber)]
+           [v (list-ref (list-ref a x) y)])
+      (cond [(not (zero? v)) (setRandomNumber a)]
+            [else (replace a x (replace (list-ref a x) y r))]))))
+
+(define replace
+  (lambda (lst pos val)
+    (append (take lst pos) `(,val) (list-tail lst (+ pos 1)))))
+
+(define newEmpty
+  (lambda (size)
+    (build-list size (lambda (x) (build-list size (lambda (y) 0))))))
+
+(define game
+  (lambda (a)
+    (begin
+      (prettyPrint a)
+      (cond [(isFail a) (printf "Failed")]
+            [(isWin a) (printf "Won")]
+            [else (let* ([key (read)]
+                         [b (match key
+                              ['a (mergeLeft a)]
+                              ['w (mergeUp a)]
+                              ['s (mergeDown a)]
+                              ['d (mergeRight a)]
+                              ['q (printf "quit")]
+                              [_  (begin (printf "Invalid input key")
+                                         (game a))])])
+                    (cond [(equal? a b) (game b)]
+                          [else (game (setRandomNumber b))]))]))))
+
+(define A (setRandomNumber (setRandomNumber (newEmpty 4))))
+
+(game A)
