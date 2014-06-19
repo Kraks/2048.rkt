@@ -14,15 +14,13 @@
   (lambda (y acc)
     (cond
       [(empty? acc) (cons y '())]
-      [(and (eq? (last acc) y)
-            (not (eq? y 0)))
+      [(eq? (last acc) y)
        (append (reverse (cdr (reverse acc))) `(,(* y 2) 0))]
-      [(not (eq? y 0)) (append acc `(,y))]
-      [else acc])))
+      [else (append acc `(,y))])))
 
 (define mergeLineLeft
   (lambda (xs)
-    (let ([ys (filter-not zero? (foldl mergeAux '() xs))])
+    (let ([ys (filter-not zero? (foldl mergeAux '() (filter-not zero? xs)))])
       (append ys (make-list (- (length xs) (length ys)) 0)))))
 
 (define mergeLineRight
