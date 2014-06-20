@@ -6,16 +6,14 @@
 
 (define transpose
   (lambda (a)
-    (map (lambda (i) 
-           (map (lambda (line) (list-ref line i)) a)) 
+    (map (lambda (i) (map (lambda (line) (list-ref line i)) a)) 
          (range (length a)))))
 
 (define mergeAux
   (lambda (y acc)
     (cond
       [(empty? acc) (cons y '())]
-      [(eq? (last acc) y)
-       (append (reverse (cdr (reverse acc))) `(,(* y 2) 0))]
+      [(eq? (last acc) y) (append (reverse (cdr (reverse acc))) `(,(* y 2) 0))]
       [else (append acc `(,y))])))
 
 (define mergeLineLeft
@@ -57,11 +55,10 @@
 
 (define zip
   (lambda (lst)
-    (cond
-      [(>= (length lst) 2)
-       (cons (cons (car lst) (cadr lst))
-             (zip (cdr lst)))]
-      [else '()])))
+    (if (>= (length lst) 2)
+        (cons (cons (car lst) (cadr lst))
+              (zip (cdr lst)))
+        '())))
 
 (define prettyPrint
   (lambda (a)
