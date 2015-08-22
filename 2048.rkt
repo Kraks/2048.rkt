@@ -93,8 +93,8 @@
   (lambda (a)
     (begin
       (prettyPrint a)
-      (cond [(isFail a) (printf "Failed")]
-            [(isWin a) (printf "Won")]
+      (cond [(isFail a) (printf "You failed\n")]
+            [(isWin a) (printf "You won\n")]
             [else (let* ([key (read)]
                          [b (match key
                               ['a (mergeLeft a)]
@@ -102,8 +102,7 @@
                               ['s (mergeDown a)]
                               ['d (mergeRight a)]
                               ['q (begin (printf "quit\n") (exit))]
-                              [_  (begin (printf "Invalid input key\n")
-                                         (newGame a))])])
+                              [_  (begin (printf "Invalid input\n") a)])])
                     (cond [(equal? a b) (newGame b)]
                           [else (newGame (setRandomNumber b))]))]))))
 
