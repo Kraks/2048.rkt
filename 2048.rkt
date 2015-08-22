@@ -101,8 +101,8 @@
                               ['w (mergeUp a)]
                               ['s (mergeDown a)]
                               ['d (mergeRight a)]
-                              ['q (printf "quit")]
-                              [_  (begin (printf "Invalid input key")
+                              ['q (begin (printf "quit\n") (exit))]
+                              [_  (begin (printf "Invalid input key\n")
                                          (newGame a))])])
                     (cond [(equal? a b) (newGame b)]
                           [else (newGame (setRandomNumber b))]))]))))
